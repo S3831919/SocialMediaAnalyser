@@ -14,7 +14,7 @@ public class MediaAnalyser {
 				"2. Delete a social media post", "3. Retrieve a social media post",
 				"4. Retrieve all replies of a particular social media post",
 				"5. Retrieve the top N post and replies with the most likes",
-				"6. Retrieve the top N post and replies with most shares", "7. Exit", "Please Select: ", };
+				"6. Retrieve the top N post and replies with most shares", "7. Exit", "Please Select: "};
 
 		// loop that iterates through the list of array items
 		for (int i = 0; i < menuArray.length; i++) {
@@ -33,6 +33,14 @@ public class MediaAnalyser {
 	
 	public static void wrongValue() {
 		System.out.println("\n**Invalid value - Please enter an number from the list**\n");
+	}
+	
+	public static void alreadyUsed() {
+		System.out.println("\n**ID already exists - please enter a unique ID**\n");
+	}
+	
+	public static void wrongTime() {
+		System.out.println("\n**Invalid value - Please enter a valid time**\n");
 	}
 	
 }

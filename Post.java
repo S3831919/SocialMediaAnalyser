@@ -1,12 +1,12 @@
 public class Post {
 
-	private int postID = 0;
-	private String postContent = "";
-	private String postAuthor = "";
-	private int postLikes = 0;
-	private int postShares = 0; 
-	private String timeStamp = ""; 
-	private int postType = 0;
+	protected int postID = 0;
+	protected String postContent = "";
+	protected String postAuthor = "";
+	protected int postLikes = 0;
+	protected int postShares = 0; 
+	protected String timeStamp = ""; 
+	protected int postType = 0;
 
 	// Constructor 
 	public Post(int postID, String postContent, String postAuthor, int postLikes, int postShares, String postTimeStamp, int postType) {
@@ -86,12 +86,11 @@ public class Post {
 		this.timeStamp = timeStamp;
 	}
 	
-	
 	// To string method used to print out all variables 
     @Override
     public String toString() {
-        return postID + " | " + postContent + " | " + postAuthor + " | " + "Post Likes: " + postLikes + " | " + "Post Shares: " + postShares +  
-        		  " | " + "Post TimeStamp: "  + timeStamp + "\n"; 
+        return "Post ID: " + postID + " | " + "Post Content: "  + postContent + " | "+ "Post Author: " + postAuthor + " | " + "Post Likes: " + postLikes + " | " + "Post Shares: " + postShares +  
+        		  " | " + "Post TimeStamp: "  + timeStamp + " | " + "Post Type: " + postType + "\n"; 
     }
     
 }

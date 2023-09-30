@@ -27,6 +27,8 @@ public class Main {
 		int time = 5; 
 		int type = 6; 
 		
+		String userEntry = ""; 
+		
 		Boolean validation = false; 
 		int userSelection = 0; 
 		List<String[]> list = new ArrayList<>();
@@ -34,14 +36,8 @@ public class Main {
 		Boolean exceptionCheck = false;
 		
 		LocalDateTime timeStamp = LocalDateTime.now();
-		
-		System.out.println(timeStamp);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-		
-		System.out.println(formatter);
 		String formattedTimestamp = timeStamp.format(formatter);
-		
-		System.out.println(formattedTimestamp);
 		
 		//Scanner to take user input
 		Scanner input = new Scanner(System.in);
@@ -49,11 +45,17 @@ public class Main {
 		//creates the array list that contains the Posts
 		ArrayList<Post> postList = new ArrayList<Post>();
 		
+		//creates the array list that contains the Reply
+		ArrayList<Reply> replyList = new ArrayList<Reply>();
+		
 		//create object for menu methods		
 		MediaAnalyser media = new MediaAnalyser(); 
 		
 		//create a new post 
 		Post post = new Post(0, "", "", 0, 0, "",0);
+		
+		//create a new reply 
+		Reply reply = new Reply(0, "", "", 0, 0, "",0);
 		
 		//takes in CSV file 
 		try (Scanner scanner = new Scanner(new File("posts.csv"))) {
@@ -77,22 +79,31 @@ public class Main {
 		for (String[] row : list) {
 			
 			post = new Post(0, "", "", 0, 0, "",0);
+			reply = new Reply(0, "", "", 0, 0, "",0);
 			
 			postList.add(post);
-			
+			replyList.add(reply);
+				
 			post.setPostID(Integer.parseInt(row[ID]));
-			
+			reply.setPostID(Integer.parseInt(row[ID]));
+				
 			post.setPostContent(row[content]);
-			
+			reply.setPostContent(row[content]);
+				
 			post.setPostAuthor(row[author]);
+			reply.setPostAuthor(row[author]);
 			
 			post.setPostLikes(Integer.parseInt(row[likes]));
+			reply.setPostLikes(Integer.parseInt(row[likes]));
 
 			post.setPostShares(Integer.parseInt(row[shares]));
+			reply.setPostShares(Integer.parseInt(row[shares]));
 			
 			post.setPostTimeStamp(row[time]);
+			reply.setPostTimeStamp(row[time]);
 			
 			post.setPostType(Integer.parseInt(row[type]));
+			reply.setPostType(Integer.parseInt(row[type]));
 			
 		}
 		
@@ -107,6 +118,7 @@ public class Main {
 			}
 			catch (InputMismatchException e){
 				media.wrongDataTypeError();
+				input.nextLine();
 			}
 			
 			// Check if number selection is valid 1-7
@@ -118,9 +130,12 @@ public class Main {
 				// Add social media post
 				case 1:
 
-					//create new Post object 
+					//create new Post and Reply object 
 					post = new Post(0, "", "", 0, 0, "",0);
+					reply = new Reply(0, "", "", 0, 0, "",0);
+					
 					postList.add(post);
+					replyList.add(reply);
 					
 				// repeatedly asks user for number of shares until they add correct data type 
 				do {
@@ -153,17 +168,22 @@ public class Main {
 				} while (post.getPostID() < 0 || exceptionCheck == true);		
 							
 				System.out.println("Please enter the Post Content: ");
-				post.setPostContent(input.next());
+				userEntry = input.next();
+				post.setPostContent(userEntry);
+				input.nextLine();
 			
 				System.out.println("Please enter the Post Author: ");
-				post.setPostAuthor(input.next());
+				userEntry = input.next();
+				post.setPostAuthor(userEntry);
+				input.nextLine();
 		
 				// repeatedly asks user for number of likes until they add correct data type 
 				do {
 					System.out.println("Please enter the number of Post likes: ");
 					exceptionCheck = false;
 					try {
-						post.setPostLikes(input.nextInt());
+						userSelection = input.nextInt();
+						post.setPostLikes(userSelection);
 					}
 					catch (InputMismatchException e){
 						media.wrongDataTypeError();
@@ -181,7 +201,8 @@ public class Main {
 					System.out.println("Please enter the number of Post shares: ");
 					exceptionCheck = false;
 					try {
-						post.setPostShares(input.nextInt());
+						userSelection = input.nextInt();
+						post.setPostShares(userSelection);
 					}
 					catch (InputMismatchException e){
 						media.wrongDataTypeError();
@@ -192,18 +213,17 @@ public class Main {
 					}
 				} while (post.getPostShares() < 0 || exceptionCheck == true);
 		
-	
-				
+					
 				// repeatedly asks user for time until they add correct format 
 				do {
 					System.out.println("Please enter the Post TimeStamp (dd-MM-yyyy HH:mm): ");
 					exceptionCheck = false;
 					String timeInput = input.next();
+					input.nextLine();
 					
 //					String regexPattern = "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\\d{4} (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])$";
 //					Pattern pattern = Pattern.compile(regexPattern);
 //					
-//						
 //					Matcher matcher = pattern.matcher(timeInput);
 //					
 //					System.out.print(matcher);
@@ -223,18 +243,93 @@ public class Main {
 				} while (post.getPostTimeStamp() == null || exceptionCheck == true);
 
 				
+				do {
 				System.out.println("Please enter the Post Type - (0) for a new Post and Post (ID) for Reply to a post: ");
-				post.setPostType(input.nextInt());
+				try {
+					userSelection = input.nextInt();
+				}
+				catch (InputMismatchException e) {
+					media.wrongDataTypeError();
+					input.nextLine();
+				}
+					post.setPostType(userSelection);
+					
+				if(userSelection == 0) {
+					post.setPostType(userSelection);
+				}
+				
+				// if post type is a reply, Reply ArrayList is updated 
+				else if(userSelection == post.getPostID() && userSelection != 0) {
+					
+					reply.setPostType(userSelection);
+					reply.setPostID(post.getPostID());
+					reply.setPostContent(post.getPostContent());
+					reply.setPostAuthor(post.getPostAuthor());
+					reply.setPostLikes(post.getPostLikes());
+					reply.setPostShares(post.getPostShares());
+					reply.setPostTimeStamp(post.getTimeStamp());
+					
+				}
+				
+				}
+				
+				while(userSelection < 0 || userSelection > postList.size());
+				
+				input.nextLine();
+				
+				break; 
+				
 		
 				// Delete a social media post
 				case 2:
-					continue; 
+					
+					//check if array list is empty
+					if (postList.isEmpty()) {
+						System.out.println("\n" + "**No posts available**" + "\n");
+					} 
+					else { //present items to delete to the user 
+						do {	//loop until user enters a valid input 
+						System.out.println("Which post would you like to remove?");
+						for (int i = 0; i < postList.size(); i++) {
+							if(postList.get(i) != null) {
+								System.out.println(i + "." + " Post " + postList.get(i).getPostID());
+							}
+						}
+						
+						System.out.print(">");
+		
+						try {
+						// takes users selection
+						userSelection = input.nextInt();
+						}
+						catch (InputMismatchException e) {
+							media.wrongDataTypeError();
+							userSelection = -1; 
+							input.nextLine();
+						}
+						
+						if(userSelection >= 0 && userSelection < postList.size()) {
+							postList.remove(userSelection); 
+							replyList.remove(userSelection); 
+							System.out.println("\n**Post " + userSelection + " Deleted**\n");
+						}
+						else {
+							media.wrongValue();
+						}
+						}
+						while(userSelection <= 0 || userSelection > postList.size());
+						
+						break;
+					}
+					
 				
 				// retrieve a social media post
 				case 3:
 
 				for(int i = 0; i < postList.size(); i++) {
+					if(postList.get(i).getPostType() == 0) {
 					System.out.println(i + ". " + postList.get(i).getPostID() + " | " +postList.get(i).getPostContent() );
+					}
 				}
 				
 				System.out.println("Please select a post: ");
@@ -243,6 +338,7 @@ public class Main {
 				}
 				catch (InputMismatchException e ) {
 					System.out.print(e);
+					input.nextLine();
 				}
 				
 				while ((userSelection >= postList.size() || userSelection < 0)) {
@@ -254,18 +350,46 @@ public class Main {
 					userSelection = input.nextInt();
 				}
 				catch (InputMismatchException e ) {
-					System.out.print(e);
+					media.wrongDataTypeError();
+					input.nextLine();
 				}
 	
 			}
 			
 				System.out.println("\n" + postList.get(userSelection).toString());
 				
+				break; 
+				
 				// Retrieve all replies of a particular social media post
 				case 4:
-					continue;
 					
+					for(int i = 0; i < postList.size(); i++) {
+						
+						if(postList.get(i).getPostType() == 0) {
+						System.out.println(i + ". " + postList.get(i).getPostID() + " | " + postList.get(i).getPostContent() );
+						}
+					}
+					
+				System.out.println("Please select a post: ");
 				
+					try {
+						userSelection = input.nextInt();
+					}
+					catch (InputMismatchException e ) {
+						media.wrongDataTypeError();
+						input.nextLine();
+					}
+							
+					for(int i = 0; i < postList.size(); i++) {
+						
+					if(postList.get(i).getPostType() == replyList.get(userSelection).getPostID()) {	
+						
+						System.out.println(replyList.get(i).toString());
+	
+					}
+			}
+					break; 
+
 				// Retrieve the top N post and replies with the most likes
 				case 5:
 					continue;

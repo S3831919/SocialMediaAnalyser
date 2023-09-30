@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -363,6 +364,8 @@ public class Main {
 				// Retrieve all replies of a particular social media post
 				case 4:
 					
+					exceptionCheck = false;
+					
 					for(int i = 0; i < postList.size(); i++) {
 						
 						if(postList.get(i).getPostType() == 0) {
@@ -370,6 +373,7 @@ public class Main {
 						}
 					}
 					
+					do {
 				System.out.println("Please select a post: ");
 				
 					try {
@@ -379,6 +383,12 @@ public class Main {
 						media.wrongDataTypeError();
 						input.nextLine();
 					}
+					
+					if((userSelection > postList.size() || userSelection < 0)) {
+						exceptionCheck = true; 
+						media.wrongValue();
+					}
+					else {
 							
 					for(int i = 0; i < postList.size(); i++) {
 						
@@ -387,17 +397,95 @@ public class Main {
 						System.out.println(replyList.get(i).toString());
 	
 					}
+					
+				}
+
 			}
+					
+			}while (exceptionCheck = false);
+
 					break; 
 
 				// Retrieve the top N post and replies with the most likes
 				case 5:
-					continue;
+
+					int topLikes = 0;
 					
+					System.out.println("Please enter the number of top posts: ");
+					
+					try {
+						userSelection = input.nextInt();
+					}
+					catch (InputMismatchException e ) {
+						media.wrongDataTypeError();
+						input.nextLine();
+					}
+					
+					while(userSelection < 0 || userSelection > postList.size()) {
+						
+						System.out.println("Please enter the number of top posts: ");
+						
+						try {
+							userSelection = input.nextInt();
+						}
+						catch (InputMismatchException e ) {
+							media.wrongDataTypeError();
+							input.nextLine();
+						}
+				}
+						
+						for(int i = 0; i < postList.size(); i++) {
+								
+							if(postList.get(i).getPostLikes() > postList.get(topLikes).getPostLikes()) {
+								topLikes = i;
+	
+							}
+	
+						}
+						
+							System.out.println(postList.get(topLikes).toString());
+
+					break; 
 					
 				// Retrieve the top N post and replies with most shares
 				case 6:
-					continue;
+					int topPostShares = 0;
+					
+					System.out.println("Please enter the number of top posts: ");
+					
+					try {
+						userSelection = input.nextInt();
+					}
+					catch (InputMismatchException e ) {
+						media.wrongDataTypeError();
+						input.nextLine();
+					}
+					
+					while(userSelection < 0 || userSelection > postList.size()) {
+						
+						System.out.println("Please enter the number of top posts: ");
+						
+						try {
+							userSelection = input.nextInt();
+						}
+						catch (InputMismatchException e ) {
+							media.wrongDataTypeError();
+							input.nextLine();
+						}
+				}
+						
+						for(int i = 0; i < postList.size(); i++) {
+								
+							if(postList.get(i).getPostShares() > postList.get(topPostShares).getPostShares()) {
+								topPostShares = i;
+	
+							}
+		
+						}
+						
+							System.out.println(postList.get(topPostShares).toString());
+
+					break; 
 					
 				
 				// Exit Program

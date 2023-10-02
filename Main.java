@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Comparator;
 
 public class Main {
 
@@ -279,8 +280,7 @@ public class Main {
 				input.nextLine();
 				
 				break; 
-				
-		
+
 				// Delete a social media post
 				case 2:
 					
@@ -322,7 +322,6 @@ public class Main {
 						
 						break;
 					}
-					
 				
 				// retrieve a social media post
 				case 3:
@@ -408,9 +407,23 @@ public class Main {
 
 				// Retrieve the top N post and replies with the most likes
 				case 5:
-
-					int topLikes = 0;
 					
+					ArrayList<Post> orderLikes = new ArrayList<Post>();
+					int topPostLikes = 0;
+					
+					for(int i = 0; i < postList.size(); i++) {
+						
+						if(postList.get(i).getPostLikes() > postList.get(topPostLikes).getPostLikes()) {
+							topPostLikes = i;
+							
+							orderLikes.add(postList.get(i));
+							
+						}
+						
+					}
+
+					Collections.sort(orderLikes, new PostLikesComparator());
+
 					System.out.println("Please enter the number of top posts: ");
 					
 					try {
@@ -421,7 +434,7 @@ public class Main {
 						input.nextLine();
 					}
 					
-					while(userSelection < 0 || userSelection > postList.size()) {
+					while(userSelection < 0 || userSelection > orderLikes.size()) {
 						
 						System.out.println("Please enter the number of top posts: ");
 						
@@ -434,23 +447,31 @@ public class Main {
 						}
 				}
 						
-						for(int i = 0; i < postList.size(); i++) {
-								
-							if(postList.get(i).getPostLikes() > postList.get(topLikes).getPostLikes()) {
-								topLikes = i;
-	
-							}
-	
+						for(int i = 0 ; i < userSelection ; i++) {
+							System.out.print(orderLikes.get(i));
 						}
-						
-							System.out.println(postList.get(topLikes).toString());
 
 					break; 
 					
 				// Retrieve the top N post and replies with most shares
 				case 6:
+					
+					ArrayList<Post> orderShares = new ArrayList<Post>();
 					int topPostShares = 0;
 					
+					for(int i = 0; i < postList.size(); i++) {
+						
+						if(postList.get(i).getPostShares() > postList.get(topPostShares).getPostShares()) {
+							topPostLikes = i;
+							
+							orderShares.add(postList.get(i));
+
+						}
+						
+					}
+
+					Collections.sort(orderShares, new PostLikesComparator());
+
 					System.out.println("Please enter the number of top posts: ");
 					
 					try {
@@ -461,7 +482,7 @@ public class Main {
 						input.nextLine();
 					}
 					
-					while(userSelection < 0 || userSelection > postList.size()) {
+					while(userSelection < 0 || userSelection > orderShares.size()) {
 						
 						System.out.println("Please enter the number of top posts: ");
 						
@@ -473,17 +494,10 @@ public class Main {
 							input.nextLine();
 						}
 				}
-						
-						for(int i = 0; i < postList.size(); i++) {
-								
-							if(postList.get(i).getPostShares() > postList.get(topPostShares).getPostShares()) {
-								topPostShares = i;
-	
-							}
-		
+
+						for(int i = 0 ; i < userSelection ; i++) {
+							System.out.print(orderShares.get(i));
 						}
-						
-							System.out.println(postList.get(topPostShares).toString());
 
 					break; 
 					
